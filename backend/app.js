@@ -27,12 +27,13 @@ app.use('/api/v1/movie', isAuthorized, movieRouter);
 app.use('/api/v1/tv', isAuthorized, tvRouter);
 app.use('/api/v1/search', isAuthorized, searchRouter);
 
-if (NODE_ENV === "production") {
-    app.use(express.static(path.join(__dirname, '../frontend/dist')));
+if (process.env.NODE_ENV === "production") {
+    app.use(express.static(path.join(__dirname, "../frontend/dist")));
+  
     app.get('*', (req, res) => {
-        res.sendFile(path.resolve(__dirname, '../frontend', 'build', 'index.html'));
-    });
-}
+      res.sendFile(path.join(__dirname, "../frontend", "dist", "index.html"))
+    })
+  }
 
 app.listen(PORT, () => {
     console.log(`Netflix Clone Backend running on http://localhost:${PORT}`);
