@@ -15,8 +15,8 @@ import searchRouter from './routes/search.routes.js';
 const __dirname = path.resolve();
 
 app.use(cors({
-    origin: CLIENT_URL,
-    credentials: true,
+  origin: CLIENT_URL,
+  credentials: true,
 }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -27,15 +27,25 @@ app.use('/api/v1/movie', isAuthorized, movieRouter);
 app.use('/api/v1/tv', isAuthorized, tvRouter);
 app.use('/api/v1/search', isAuthorized, searchRouter);
 
-if (process.env.NODE_ENV === "production") {
-    app.use(express.static(path.join(__dirname, "../frontend/dist")));
-  
-    app.get('*', (req, res) => {
-      res.sendFile(path.join(__dirname, "../frontend", "dist", "index.html"))
-    })
-  }
+// if (NODE_ENV === "production") {
+//   app.use(express.static(path.join(__dirname, "../frontend/dist")));
+
+//   app.get('*', (req, res) => {
+//     res.sendFile(path.join(__dirname, "../frontend", "dist", "index.html"))
+//   })
+// }
+
+if (NODE_ENV === "production") {
+  const staticPath = path.join(__dirname, "../frontend/dist");
+  console.log("Serving static files from:", staticPath);
+  app.use(express.static(staticPath));
+
+  app.get('*', (req, res) => {
+      res.sendFile(path.join(staticPath, "index.html"));
+  });
+}
 
 app.listen(PORT, () => {
-    console.log(`Netflix Clone Backend running on http://localhost:${PORT}`);
-    connectToDatabase();
+  console.log(`Netflix Clone Backend running on http://localhost:${PORT}`);
+  connectToDatabase();
 });
